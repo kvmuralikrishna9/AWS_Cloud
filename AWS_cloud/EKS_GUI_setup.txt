@@ -1,4 +1,4 @@
-Last Modiied: May 16, 2024
+Last Modified: May 16, 2024
 
 ### Creating and Deleting EKS Cluster & Node Groups
 ====================================================
