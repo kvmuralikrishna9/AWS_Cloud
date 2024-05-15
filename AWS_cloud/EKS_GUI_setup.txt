@@ -12,52 +12,64 @@ IAM > Users > user_name > security credentials > create Access-ID & Access-key
 EC2 > Key pairs > create key pairs
 
 3. IAM Role for Cluster
-IAM > Roles > create Roles > AWS service > Use Case: EKS -> EKS Cluster > attach policy "AmazonEKSClusterPolicy" > provide_cluster_role_name > provide_tags > create role
+IAM > Roles > create Roles > AWS service > Use Case: EKS -> EKS Cluster 
+> attach policy "AmazonEKSClusterPolicy" > provide_cluster_role_name > provide_tags > create role
 
 4. IAM Role for Worker Node groups
-IAM > Roles > create Roles > AWS service > Use Case: EC2 > attach policy "AmazonEC2ContainerRegistryReadOnly ; AmazonEKS_CNI_Policy ; AmazonEKSWorkerNodePolicy > provide_worker-node_role_name > provide_tags > create role
+IAM > Roles > create Roles > AWS service > Use Case: EC2 
+> attach policy "AmazonEC2ContainerRegistryReadOnly ; AmazonEKS_CNI_Policy ; AmazonEKSWorkerNodePolicy 
+> provide_worker-node_role_name > provide_tags > create role
 
 ====================================================================================================
 
 ## Creating EKS Cluster
 
-> EKS > Add cluster -> Create > add_cluster_Name > kubernetes-version > select_cluster_IAM_role > (select) Cluster access > Tags
+> EKS > Add cluster -> Create > add_cluster_Name > kubernetes-version > select_cluster_IAM_role 
+> (select) Cluster access > Tags > Next
 
-> Specify networking > Networking -> (select) vpc ; subnets ; security groups ; ipv4 ; Configure Kubernetes service IP address range (Process requirements)
+> Specify networking > Networking -> (select) vpc ; subnets ; security groups ; ipv4 ; 
+Configure Kubernetes service IP address range (Process requirements) > Next
 
 > Cluster endpoint access
 Practise: Public
 Real time: Private (we can connnect using private as we use VPN in real time)
 * also select "Advanced Setting"
-CIDR 0.0.0.0/0 as we using public
+CIDR 0.0.0.0/0 as we using public > Next
 
-> Configure observability > Metrics (Process req) > Control Plane logging (select) API server ; Audit & others based on process req
-(Audit logs will be stored (e.g., CloudWatch Logs))
+> Configure observability > Metrics (Process req) 
+> Control Plane logging (select) API server ; Audit & others based on process req > Next
+(Audit logs will be stored (e.g., CloudWatch Logs)) 
 
 > Select add-ons > Default will be there based on requirements, can add any other
 
 > Configure selected add-ons settings (Selet desired version of individual add-ons)
 
 > Review and create
-**Once Selected "Create", Status will change to "Creating", will take 5-15mins to configure all the set-up and to go "Active"**
+**Once Selected "Create", Status will be "Creating", will take 5-15mins to go "Active"**
 
 ====================================================================================================
 
 ## Creating EKS WorkerNode
 
-Once Cluster is Active.
+**Once Cluster is Active.
 
-> EKS > Cluters > Compute > Node groups > Add node group > add_cluster_Name > select_cluster_IAM_role > Launch templates (use if specific tempale created (in real time we may have), if not uncheck) > Add K8s labels ; taints and tags if needed
+> EKS > Cluters > Compute > Node groups > Add node group > add_cluster_Name > select_cluster_IAM_role 
+> Launch templates (use if specific tempale created (in real time we may have), if not uncheck) 
+> Add K8s labels ; taints and tags if needed > Next
 
-> Set compute & scaling configure > Node group compute configuration > (select) AMI type ; Capacity type ; instance type ; Disk size > Node group scaling configuration > (select-nodes-size): Desired ; Minimum ; Maximum size
-*(these given node size will be considered for Autoscalling group of cluster)*
+> Set compute & scaling configure > Node group compute configuration 
+> (select) AMI type ; Capacity type ; instance type ; Disk size > Node group scaling configuration
+> (select-nodes-size): Desired ; Minimum ; Maximum size > Next
+*(these given node size will be considered for Autoscalling group of cluster)* 
 
-> Node group update configuration > Maximum unavailable > (select) Number / Percentage > value
+> Node group update configuration > Maximum unavailable > (select) Number / Percentage > value > Next
 
-> Specigy networking > Node group update configuration > Subnets (Add same subnets where EKS cluster created) > (select) Configure remote access to nodes > (select) EC2 key pair > Allow remote access from > Selected security groups (Select securiy groups)
+> Specigy networking > Node group update configuration > Subnets (Add same subnets where EKS cluster created) 
+> (select) Configure remote access to nodes > (select) EC2 key pair 
+> Allow remote access from > Selected security groups (Select securiy groups) > Next
  
 > Review and create
-**Once Selected "Create", Status will change to "Creating", will take 5-15mins to configure all the set-up and to go "Active"**
+**Once Selected "Create", Status will be "Creating", will take 5-15mins to go "Active"**
 
 **Imp Note: Auto Scaling group will be created with wokernode under EC2
 In future if we wanted to change the auto scalling (Desired/Minimum/Maximum)
@@ -74,7 +86,8 @@ Once nodes created, we can check the nodes under > EKS > cluster > Compute > nod
 
 > Cluster > Node group > delete 
 (Once Selected "delete" will take 5-15mins to detach node group based on node's size)
-**Imp Note : Once node group is deleted, Under EC2 resources, cluster's auto-scaling group along with associated nodes (EC2 instance's) will be deleted.
+**Imp Note : Once node group is deleted, Under EC2 resources, cluster's auto-scaling group
+along with associated nodes (EC2 instance's) will be deleted.
 
 # Deleting Cluster
 
